@@ -14,13 +14,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 import android.util.Log;
-import android.view.Display;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.*;
 
 import com.iflytek.speech.*;
@@ -36,6 +31,7 @@ public class topicActivity extends Activity implements OnClickListener{
     private String TAG = "Speech";
     private Iat iat ;
     private Tts tts;
+    private GestureDetector mDetector;
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         // 设置标题栏（无标题）
@@ -50,6 +46,7 @@ public class topicActivity extends Activity implements OnClickListener{
         iat.Init(topicActivity.this,mInitListener);
         tts = new Tts();
         tts.Init(topicActivity.this,mTtsInitListener);
+        mDetector= new GestureDetector(topicActivity.this,new DefaultGestureListener());
     }
     @Override
     public void onClick(View view) {
@@ -78,7 +75,12 @@ public class topicActivity extends Activity implements OnClickListener{
         }
     }
 
-
+    public boolean onTouchEvent(MotionEvent event) {
+            if (mDetector.onTouchEvent(event))
+                 return true;
+            else
+                 return false;
+      }
 
     private void showTip(final String str)
     {
@@ -235,7 +237,36 @@ public class topicActivity extends Activity implements OnClickListener{
         }
     };
 
+    private class DefaultGestureListener extends GestureDetector.SimpleOnGestureListener {
+        private static final String DEBUG_TAG = "Gestures";
 
+        @Override
+        public void onLongPress(MotionEvent e) {
+            Log.d(DEBUG_TAG,"onLongPress: "+e.toString());
+            tts.startReading(mTtsListener,"长按");
+        }
+        private int verticalMinDistance = 100;
+        private int minVelocity         = 0;
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2,
+                               float velocityX, float velocityY) {
+            Log.d(DEBUG_TAG, "onFling: " + e1.toString() + e2.toString());
+            if (e1.getX() - e2.getX() > verticalMinDistance && Math.abs(velocityX) > minVelocity) {
+
+
+                tts.startReading(mTtsListener,"向左");
+            } else if (e2.getX() - e1.getX() > verticalMinDistance && Math.abs(velocityX) > minVelocity) {
+
+                tts.startReading(mTtsListener,"向右");
+            }else if(e1.getY() - e2.getY() > verticalMinDistance && Math.abs(velocityY) > minVelocity){
+                tts.startReading(mTtsListener,"向上");
+            }
+            else if(e2.getY() - e1.getY() > verticalMinDistance && Math.abs(velocityY) > minVelocity){
+                tts.startReading(mTtsListener,"向下");
+            }
+            return true;
+        }
+    }
 
 
 
