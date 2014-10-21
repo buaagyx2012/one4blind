@@ -38,6 +38,10 @@ public class Tts {
 
     }
 
+    public void pauseReading(SynthesizerListener TtsLister){
+        mTts.pauseSpeaking(TtsLister);
+    }
+
     public void stopReading(SynthesizerListener TtsLister){
         mTts.stopSpeaking(TtsLister);
     }

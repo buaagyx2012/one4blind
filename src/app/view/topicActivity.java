@@ -29,8 +29,11 @@ public class topicActivity extends Activity implements OnClickListener{
     private Handler mHandler;
     private Dialog mLoadDialog;
     private String TAG = "Speech";
+    //语音识别对象
     private Iat iat ;
+    //语音合成对象
     private Tts tts;
+    //手势识别对象
     private GestureDetector mDetector;
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -42,10 +45,13 @@ public class topicActivity extends Activity implements OnClickListener{
         findViewById(R.id.read).setOnClickListener(topicActivity.this);
 
         mToast = Toast.makeText(topicActivity.this,"",Toast.LENGTH_LONG);
+        //语音识别对象初始化
         iat = new Iat();
         iat.Init(topicActivity.this,mInitListener);
+        //语音合成对象初始化
         tts = new Tts();
         tts.Init(topicActivity.this,mTtsInitListener);
+        //手势识别初始化
         mDetector= new GestureDetector(topicActivity.this,new DefaultGestureListener());
     }
     @Override
@@ -75,6 +81,7 @@ public class topicActivity extends Activity implements OnClickListener{
         }
     }
 
+    //修改onTouch 使手势识别可用
     public boolean onTouchEvent(MotionEvent event) {
             if (mDetector.onTouchEvent(event))
                  return true;
@@ -241,27 +248,41 @@ public class topicActivity extends Activity implements OnClickListener{
         private static final String DEBUG_TAG = "Gestures";
 
         @Override
+        //长按
+
         public void onLongPress(MotionEvent e) {
             Log.d(DEBUG_TAG,"onLongPress: "+e.toString());
             tts.startReading(mTtsListener,"长按");
         }
+
+        @Override
+        //暂停 双击
+        public boolean onDoubleTap(MotionEvent e) {
+            Log.d(DEBUG_TAG,"onLongPress: "+e.toString());
+            tts.startReading(mTtsListener,"双击");
+            return true;
+        }
+
+        //滑动最短距离
         private int verticalMinDistance = 100;
+        //最小的滑动速度
         private int minVelocity         = 0;
         @Override
+        //滑动
         public boolean onFling(MotionEvent e1, MotionEvent e2,
                                float velocityX, float velocityY) {
             Log.d(DEBUG_TAG, "onFling: " + e1.toString() + e2.toString());
-            if (e1.getX() - e2.getX() > verticalMinDistance && Math.abs(velocityX) > minVelocity) {
+            if (e1.getX() - e2.getX() > Math.abs(e1.getY()-e2.getY()) && Math.abs(velocityX) > minVelocity) {
 
 
                 tts.startReading(mTtsListener,"向左");
-            } else if (e2.getX() - e1.getX() > verticalMinDistance && Math.abs(velocityX) > minVelocity) {
+            } else if (e2.getX() - e1.getX() >Math.abs(e1.getY()-e2.getY()) && Math.abs(velocityX) > minVelocity) {
 
                 tts.startReading(mTtsListener,"向右");
-            }else if(e1.getY() - e2.getY() > verticalMinDistance && Math.abs(velocityY) > minVelocity){
+            }else if(e1.getY() - e2.getY() > Math.abs(e1.getX()-e2.getX()) && Math.abs(velocityY) > minVelocity){
                 tts.startReading(mTtsListener,"向上");
             }
-            else if(e2.getY() - e1.getY() > verticalMinDistance && Math.abs(velocityY) > minVelocity){
+            else if(e2.getY() - e1.getY() > Math.abs(e1.getX()-e2.getX()) && Math.abs(velocityY) > minVelocity){
                 tts.startReading(mTtsListener,"向下");
             }
             return true;
