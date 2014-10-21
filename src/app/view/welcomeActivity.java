@@ -1,6 +1,7 @@
 package app.view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -37,6 +38,11 @@ public class welcomeActivity extends Activity {
             }
         });
 
+    }
+
+    public void toTopic(View view){
+        Intent intent = new Intent(welcomeActivity.this,topicActivity.class);
+        this.startActivity(intent);
     }
 
 

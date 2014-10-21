@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/layout_backgroud"
+    android:orientation="vertical" >
+    <Button
+        android:id="@+id/start"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+        android:text="开始"
+        android:tag="0"
+    />
+    <Button
+            android:id="@+id/stop"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="停止"
+            android:tag="1"
+    />
+    <EditText
+            android:id="@+id/text"
+            android:layout_width="fill_parent" android:layout_height="wrap_content"
+    />
+    <Button
+            android:id="@+id/read"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="读"
+            android:tag="2"
+    />
+
+</LinearLayout>

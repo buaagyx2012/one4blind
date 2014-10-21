@@ -24,5 +24,13 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity android:name="app.view.topicActivity"
+                  android:label="语音测试"
+                  android:icon="@drawable/icon"
+                  android:screenOrientation="portrait"
+                  android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale">
+
+        </activity>
     </application>
 </manifest>
